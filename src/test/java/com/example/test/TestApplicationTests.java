@@ -8,9 +8,16 @@ import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.example.test.util.HttpUtils;
 import com.example.test.util.SftpUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,9 +47,25 @@ class TestApplicationTests {
 
     @Test
     void contextLoads() throws IOException {
+        //通过SFTP获取远端服务器文件
         List<String> file = SftpUtils.readFile("root", "mfcxgxddc(@zhongzhong)", 22, "8.142.4.4", "/data/jar-server/admin/api/application-prod.yml");
         System.out.println(file);
     }
+
+    @Test
+    void httpTest(){
+        String url = "https://www.baidu.com";
+        try {
+            CloseableHttpResponse response = HttpUtils.getHttp(url);
+            log.info("打印:{}",response.getStatusLine());
+            log.info("2222：{}",response.toString());
+            JSONObject jsonObject = JSONObject.parseObject(EntityUtils.toString(response.getEntity()));
+            log.info("entity:{}",jsonObject);
+        } catch (IOException e) {
+            log.info("请求:{}抛出异常:{}",url,e);
+        }
+    }
+
 
 
     /**
