@@ -10,8 +10,7 @@ import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.test.util.HttpUtils;
-import com.example.test.util.SftpUtils;
+import com.example.test.util.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -24,6 +23,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 @Data
@@ -54,17 +55,108 @@ class TestApplicationTests {
 
     @Test
     void httpTest(){
-        String url = "https://www.baidu.com";
-        try {
-            CloseableHttpResponse response = HttpUtils.getHttp(url);
-            log.info("打印:{}",response.getStatusLine());
-            log.info("2222：{}",response.toString());
-            JSONObject jsonObject = JSONObject.parseObject(EntityUtils.toString(response.getEntity()));
-            log.info("entity:{}",jsonObject);
-        } catch (IOException e) {
-            log.info("请求:{}抛出异常:{}",url,e);
-        }
+        String url = "https://bike.mofangchuxing.com/operation/share/task/detail?t=Oj9J5BzTP95HEgyzCCPeNThOk";
+        String response = HttpUtils.getHttp(url);
+        log.info("2222：{}",response);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        log.info("entity:{}",jsonObject);
     }
+
+    @Test
+    void postHttpTest(){
+        String url = "https://bike.mofangchuxing.com/admin/users/list";
+        Map<String,Object> map = new HashMap<>();
+        map.put("t","zSdQRH4XW8lTWeLBCPb9qufw4");
+        String body = JSONObject.toJSONString(map);
+        String responseBody = HttpUtils.postHttp(url,body);
+        log.info("2222:{}",responseBody);
+        JSONObject jsonObject =  JSONObject.parseObject(responseBody);
+        log.info("json:{}",jsonObject);
+    }
+
+
+
+    @Test
+    void sdf() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String userName = "zzcx";
+        String appKey = "chdi7mnks0n0n9xy07";
+        String appSecret = "9l52ho2sd3fv9hweok0ad6qwu0cvuhde";
+        String timeStamp = sdf.format(new Date());
+
+        String signTemp = "appKey=" + appKey + "&timeStamp=" + timeStamp +"&userName=" + userName + "&appSecret=" + appSecret;
+        String sign = MD5Utils.getMD5(signTemp);
+        String iccid = "89860490192070729950";
+
+        String param = "appKey=" + appKey;
+        param += "&timeStamp=" + timeStamp;
+        param += "&userName=" + userName;
+        param += "&sign=" + sign;
+        param += "&iccid=" + iccid;
+        log.info("111:{}",param);
+        Map<String,Object> map = new HashMap<>();
+        map.put("appKey",appKey);
+        map.put("timeStamp",timeStamp);
+        map.put("userName",userName);
+        map.put("sign",sign);
+        map.put("iccid",iccid);
+        StringBuilder s = new StringBuilder();
+        for (Map.Entry<String,Object> m:map.entrySet()){
+            s.append(m.getKey()).append("=").append(m.getValue());
+        }
+        String result = sendPost("http://121.89.194.200:8082/admin/api/v2/cardInfo",param);
+        System.out.println(result);
+    }
+
+
+    public static String sendPost(String url, String param) {
+        PrintWriter out = null;
+        BufferedReader in = null;
+        String result = "";
+        try {
+            URL realUrl = new URL(url);
+            // 打开和URL之间的连接
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            // 设置通用的请求属性
+            // 设置传递方式
+            conn.setRequestMethod("POST");
+            // 设置文件类型:
+            // 发送POST请求必须设置如下两行
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            // 获取URLConnection对象对应的输出流
+            out = new PrintWriter(conn.getOutputStream());
+            // 发送请求参数
+            out.print(param);
+            // flush输出流的缓冲
+            out.flush();
+            // 定义BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
+            }
+        } catch (Exception e) {
+            System.out.println("发送 POST 请求出现异常！" + e);
+            e.printStackTrace();
+        }
+        // 使用finally块来关闭输出流、输入流
+        finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 
 
 

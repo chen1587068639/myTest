@@ -27,8 +27,8 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.10</version>
         </dependency>
+        <!--httpclient-->
         <!--   json解析工具     -->
         <dependency>
             <groupId>com.alibaba</groupId>
