@@ -3,7 +3,7 @@ package com.example.test.util;
 import java.util.Random;
 import java.util.UUID;
 
-public class randomStringUtils {
+public class RandomStringUtils {
 
     private static final char[] FIX_STR = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
             'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',

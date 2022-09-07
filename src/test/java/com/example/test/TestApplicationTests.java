@@ -44,10 +44,8 @@ class DemoData {
 @SpringBootTest
 @Slf4j
 class TestApplicationTests {
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒");
-
     @Test
-    void contextLoads() throws IOException {
+    void contextLoads(){
         //通过SFTP获取远端服务器文件
         List<String> file = SftpUtils.readFile("root", "mfcxgxddc(@zhongzhong)", 22, "8.142.4.4", "/data/jar-server/admin/api/application-prod.yml");
         System.out.println(file);
@@ -104,14 +102,12 @@ class TestApplicationTests {
         System.out.println(result);
     }
 
-
     @Test
-    void sdf() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    void postByJava() {
         String userName = "zzcx";
         String appKey = "chdi7mnks0n0n9xy07";
         String appSecret = "9l52ho2sd3fv9hweok0ad6qwu0cvuhde";
-        String timeStamp = sdf.format(new Date());
+        String timeStamp = DateUtils.DATE_FORMAT.format(new Date());
         String signTemp = "appKey=" + appKey + "&timeStamp=" + timeStamp +"&userName=" + userName + "&appSecret=" + appSecret;
         String sign = MD5Utils.getMD5(signTemp);
         String iccid = "89860490192070729950";
@@ -124,7 +120,5 @@ class TestApplicationTests {
         String result = HttpUtils.sendPost("http://121.89.194.200:8082/admin/api/v2/cardInfo",param);
         System.out.println(result);
     }
-
-
 
 }
