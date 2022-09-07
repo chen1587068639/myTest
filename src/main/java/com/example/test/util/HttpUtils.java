@@ -2,6 +2,7 @@ package com.example.test.util;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -10,26 +11,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HttpContext;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,19 +51,34 @@ public class HttpUtils {
         return null;
     }
 
-
-    public static String postHttp(String url,String jsonBody){
+    /**
+     * 发送post请求，访问url，body体参数要求是param1=value1&param2=value2格式
+     * CloseableHttpClient.execute方法实现了获取响应包数据，关闭流功能不必手动关闭
+     * @param url：请求路径
+     * @param headMap：请求头部
+     * @param bodyMap：请求体
+     * @return
+     */
+    public static String simPostHttp(String url,Map<String,String> headMap,Map<String,String> bodyMap){
         //创建http客户端
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        ResponseHandler<String> responseHandler=new BasicResponseHandler();
+        //CloseableHttpClient通过ResponseHandler把响应包中的数据转化成相应的格式
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
         HttpPost httpPost = new HttpPost(url);
-
+        //组装post请求head
+        for (Map.Entry<String, String> e : headMap.entrySet()) {
+            httpPost.addHeader(e.getKey(), e.getValue());
+        }
+        //组装post请求head
+        List<NameValuePair> pairList = new ArrayList<>();
+        if (MapUtils.isNotEmpty(bodyMap)){
+            for (Map.Entry<String,String> param : bodyMap.entrySet()){
+                pairList.add(new BasicNameValuePair(param.getKey(),param.getValue()));
+            }
+        }
         try {
-
-            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            httpPost.setHeader("Accept", "application/json");
-            StringEntity stringEntity = new StringEntity(jsonBody, "UTF-8"); // or "gbk"
-            httpPost.setEntity(stringEntity);
+            //被UrlEncodedFormEntity编码后的内容传输中变成body的param1=value1&param2=value2格式
+            httpPost.setEntity(new UrlEncodedFormEntity(pairList, "UTF-8"));
             return httpclient.execute(httpPost, responseHandler);
         } catch (IOException e) {
             log.info("post请求:{}路径抛出异常:{}",url,e);
@@ -81,50 +86,4 @@ public class HttpUtils {
         return null;
     }
 
-
-
-    /**
-     * post form
-     *
-     * @param headers
-     * @param bodys
-     * @return
-     * @throws Exception
-     */
-    public static String doPost(String url, Map<String, String> headers,
-                                      Map<String, String> bodys)
-            throws Exception {
-        //创建http客户端
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-
-        HttpPost httpPost = new HttpPost(url);
-
-        for (Map.Entry<String, String> e : headers.entrySet()) {
-            httpPost.addHeader(e.getKey(), e.getValue());
-        }
-
-        if (bodys != null) {
-            List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-
-            for (String key : bodys.keySet()) {
-                nameValuePairList.add(new BasicNameValuePair(key, bodys.get(key)));
-            }
-            UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(nameValuePairList, "utf-8");
-            formEntity.setContentType("application/x-www-form-urlencoded; charset=UTF-8");
-
-            httpPost.setEntity(formEntity);
-        }
-        ResponseHandler<String> responseHandler=new BasicResponseHandler();
-
-        return httpClient.execute(httpPost,responseHandler);
-    }
-
-    /**
-     * map转json
-     * @param map
-     * @return
-     */
-    public static String getJSONString(Map<String,Object> map){
-        return JSONObject.toJSONString(map);
-    }
 }

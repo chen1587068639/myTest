@@ -65,15 +65,37 @@ class TestApplicationTests {
     @Test
     void postHttpTest(){
         String url = "https://bike.mofangchuxing.com/admin/users/list";
-        Map<String,Object> map = new HashMap<>();
-        map.put("t","zSdQRH4XW8lTWeLBCPb9qufw4");
-        String body = JSONObject.toJSONString(map);
-        String responseBody = HttpUtils.postHttp(url,body);
+        Map<String,String> map = new HashMap<>();
+        map.put("t","f2L8MoXcplKvVoB7HPeo3ETfV");
+        String responseBody = HttpUtils.simPostHttp(url,new HashMap<>(),map);
         log.info("2222:{}",responseBody);
         JSONObject jsonObject =  JSONObject.parseObject(responseBody);
         log.info("json:{}",jsonObject);
     }
 
+
+    @Test
+    void simPostHttpTest() {
+        String userName = "zzcx";
+        String appKey = "chdi7mnks0n0n9xy07";
+        String appSecret = "9l52ho2sd3fv9hweok0ad6qwu0cvuhde";
+        String timeStamp = DateUtils.DATE_FORMAT.format(new Date());
+        String signTemp = "appKey=" + appKey + "&timeStamp=" + timeStamp +"&userName=" + userName + "&appSecret=" + appSecret;
+        String sign = MD5Utils.getMD5(signTemp);
+        String iccid = "89860452041970672460";
+
+        Map<String,String> bodyMap = new HashMap<>();
+        bodyMap.put("appKey",appKey);
+        bodyMap.put("timeStamp",timeStamp);
+        bodyMap.put("userName",userName);
+        bodyMap.put("sign",sign);
+        bodyMap.put("iccid",iccid);
+        Map<String,String> headMap = new HashMap<>();
+        headMap.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
+        headMap.put("Accept","application/json");
+        String result = HttpUtils.simPostHttp("http://121.89.194.200:8082/admin/api/v2/cardInfo",headMap,bodyMap);
+        System.out.println(result);
+    }
 
 
     @Test
@@ -95,16 +117,6 @@ class TestApplicationTests {
         param += "&sign=" + sign;
         param += "&iccid=" + iccid;
         log.info("111:{}",param);
-        Map<String,Object> map = new HashMap<>();
-        map.put("appKey",appKey);
-        map.put("timeStamp",timeStamp);
-        map.put("userName",userName);
-        map.put("sign",sign);
-        map.put("iccid",iccid);
-        StringBuilder s = new StringBuilder();
-        for (Map.Entry<String,Object> m:map.entrySet()){
-            s.append(m.getKey()).append("=").append(m.getValue());
-        }
         String result = sendPost("http://121.89.194.200:8082/admin/api/v2/cardInfo",param);
         System.out.println(result);
     }
