@@ -1,4 +1,5 @@
 package com.example.test.filter;
+
 import com.alibaba.excel.metadata.CellData;
 import com.alibaba.excel.metadata.Head;
 import com.alibaba.excel.util.StyleUtil;
@@ -49,6 +50,7 @@ public class CellColorSheetWriteHandler implements CellWriteHandler {
 
     /**
      * 设置excel的内容格式包括：字体，字颜色，字号，背景颜色，对齐，边框
+     *
      * @param writeSheetHolder
      * @param writeTableHolder
      * @param cellDataList
@@ -59,12 +61,12 @@ public class CellColorSheetWriteHandler implements CellWriteHandler {
      */
     @Override
     public void afterCellDispose(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, List<CellData> cellDataList, Cell cell, Head head, Integer relativeRowIndex, Boolean isHead) {
-        if(0 != cell.getRowIndex()){
-            if (3 > cell.getRowIndex()){
+        if (0 != cell.getRowIndex()) {
+            if (3 > cell.getRowIndex()) {
                 // 根据单元格获取workbook
                 Workbook workbook = cell.getSheet().getWorkbook();
                 //设置行高
-                writeSheetHolder.getSheet().getRow(cell.getRowIndex()).setHeight((short)(1.4*256));
+                writeSheetHolder.getSheet().getRow(cell.getRowIndex()).setHeight((short) (1.4 * 256));
                 // 单元格策略
                 WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
                 // 设置背景颜色白色
@@ -80,25 +82,26 @@ public class CellColorSheetWriteHandler implements CellWriteHandler {
                 // 创建字体实例
                 WriteFont cellWriteFont = new WriteFont();
                 // 设置字体大小
-                cellWriteFont.setFontHeightInPoints((short)12);
+                cellWriteFont.setFontHeightInPoints((short) 12);
                 cellWriteFont.setColor(colorIndex);
                 contentWriteCellStyle.setWriteFont(cellWriteFont);
-                if ((cell.getRowIndex()&1)==0){
+                if ((cell.getRowIndex() & 1) == 0) {
                     contentWriteCellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
                     CellStyle cellStyle = StyleUtil.buildHeadCellStyle(workbook, contentWriteCellStyle);
-                    cellStyleMap.put("whiteStyle",cellStyle);
-                }else {
+                    cellStyleMap.put("whiteStyle", cellStyle);
+                } else {
                     contentWriteCellStyle.setFillForegroundColor(IndexedColors.LIGHT_TURQUOISE1.getIndex());
                     CellStyle cellStyle = StyleUtil.buildHeadCellStyle(workbook, contentWriteCellStyle);
-                    cellStyleMap.put("blueStyle",cellStyle);
+                    cellStyleMap.put("blueStyle", cellStyle);
                 }
             }
-            if ((cell.getRowIndex()&1)==0){
+            if ((cell.getRowIndex() & 1) == 0) {
                 cell.setCellStyle(cellStyleMap.get("whiteStyle"));
             } else {
                 cell.setCellStyle(cellStyleMap.get("blueStyle"));
             }
         }
     }
-    public Map<String,CellStyle> cellStyleMap = new HashMap<>();
+
+    public Map<String, CellStyle> cellStyleMap = new HashMap<>();
 }

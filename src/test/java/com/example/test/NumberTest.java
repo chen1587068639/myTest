@@ -1,15 +1,17 @@
 package com.example.test;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@Slf4j
+/**
+ * @Author: chengw
+ * @Date: 2022/12/5 下午5:20
+ */
 @SpringBootTest
-public class SocketTest {
+public class NumberTest {
 
     @Test
-    void socketClient() {
-
+    public void testNumberOne(){
+        System.out.println((10/3) * 1.5);
     }
 }

@@ -8,13 +8,13 @@ import java.security.NoSuchAlgorithmException;
 @Slf4j
 public class MD5Utils {
     // 全局数组
-    private final static String[] strDigits = { "0", "1", "2", "3", "4", "5",
-            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","h","j","?","~" };
+    private final static String[] strDigits = {"0", "1", "2", "3", "4", "5",
+            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "j", "?", "~"};
 
     /**
      * MessageDigest 类为应用程序提供信息摘要算法的功能，如 MD5 或 SHA 算法
      */
-    public static String getMD5(String string){
+    public static String getMD5(String string) {
         byte[] bytes = string.getBytes();
         try {
             //使用MD5加密
@@ -22,12 +22,12 @@ public class MD5Utils {
             byte[] digest = md5.digest(bytes);
             return byteToString(digest);
         } catch (NoSuchAlgorithmException e) {
-            log.info("MD5加密失败:",e);
+            log.info("MD5加密失败:", e);
         }
         return null;
     }
 
-    private static String byteToString(byte[] bytes){
+    private static String byteToString(byte[] bytes) {
         int len = bytes.length;
         StringBuilder result = new StringBuilder();
         for (byte byte0 : bytes) {
@@ -36,12 +36,6 @@ public class MD5Utils {
         }
         return result.toString();
     }
-
-
-
-
-
-
 
 
     // 返回形式为数字跟字符串

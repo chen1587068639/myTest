@@ -16,18 +16,18 @@ import java.util.List;
 public class ExcelUtils {
 
 
-
     /**
      * 导出表头必填字段
-     * @param outputStream 输入流
-     * @param dataList 导入数据
-     * @param headList 表头列表
-     * @param sheetName sheetname
+     *
+     * @param outputStream      输入流
+     * @param dataList          导入数据
+     * @param headList          表头列表
+     * @param sheetName         sheetname
      * @param cellWriteHandlers
      */
     public static void writeExcelWithModel(OutputStream outputStream, List<? extends Object> dataList, List<String> headList, String sheetName, CellWriteHandler... cellWriteHandlers) {
         List<List<String>> list = new ArrayList<>();
-        if(headList != null){
+        if (headList != null) {
             headList.forEach(h -> list.add(Collections.singletonList(h)));
         }
 
@@ -50,12 +50,14 @@ public class ExcelUtils {
         // 开始导出
         excelWriterSheetBuilder.doWrite(dataList);
     }
+
     /**
      * 导出表头必填字段标红色
-     * @param outputStream 输入流
-     * @param dataList 导入数据
-     * @param headList 表头列表
-     * @param sheetName sheetname
+     *
+     * @param outputStream      输入流
+     * @param dataList          导入数据
+     * @param headList          表头列表
+     * @param sheetName         sheetname
      * @param cellWriteHandlers
      */
     public static void writeExcelWithModel(OutputStream outputStream, List<? extends Object> dataList, Class<? extends Object> headList, String sheetName, CellWriteHandler... cellWriteHandlers) {
@@ -67,9 +69,9 @@ public class ExcelUtils {
         // 初始化表格样式
         HorizontalCellStyleStrategy horizontalCellStyleStrategy = new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
 
-        ExcelWriterSheetBuilder excelWriterSheetBuilder = EasyExcel.write(outputStream,headList).sheet(sheetName).registerWriteHandler(horizontalCellStyleStrategy);
-        if(null != cellWriteHandlers && cellWriteHandlers.length>0){
-            for(int i = 0 ; i < cellWriteHandlers.length;i++){
+        ExcelWriterSheetBuilder excelWriterSheetBuilder = EasyExcel.write(outputStream, headList).sheet(sheetName).registerWriteHandler(horizontalCellStyleStrategy);
+        if (null != cellWriteHandlers && cellWriteHandlers.length > 0) {
+            for (int i = 0; i < cellWriteHandlers.length; i++) {
                 excelWriterSheetBuilder.registerWriteHandler(cellWriteHandlers[i]);
             }
         }

@@ -11,7 +11,9 @@ import com.alibaba.excel.write.metadata.style.WriteFont;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.usermodel.*;
+
 import java.util.List;
+
 @Slf4j
 public class TitleColorSheetWriteHandler implements CellWriteHandler {
 
@@ -47,6 +49,7 @@ public class TitleColorSheetWriteHandler implements CellWriteHandler {
 
     /**
      * 设置excel title格式包括：字体，字颜色，字号，背景颜色，对齐，边框
+     *
      * @param writeSheetHolder
      * @param writeTableHolder
      * @param cellDataList
@@ -58,12 +61,12 @@ public class TitleColorSheetWriteHandler implements CellWriteHandler {
     @Override
     public void afterCellDispose(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, List<CellData> cellDataList, Cell cell, Head head, Integer relativeRowIndex, Boolean isHead) {
         // 只处理第一行
-        if( 0 == cell.getRowIndex()){
+        if (0 == cell.getRowIndex()) {
             // 设置列宽
             Sheet sheet = writeSheetHolder.getSheet();
             sheet.setColumnWidth(cell.getColumnIndex(), 14 * 256);
             // 设置行高
-            writeSheetHolder.getSheet().getRow(0).setHeight((short)(1.8*256));
+            writeSheetHolder.getSheet().getRow(0).setHeight((short) (1.8 * 256));
             // 获取workbook
             Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
             // 获取样式实例
@@ -73,7 +76,7 @@ public class TitleColorSheetWriteHandler implements CellWriteHandler {
             // 设置字体样式
             headWriteFont.setFontName("宋体");
             // 设置字体大小
-            headWriteFont.setFontHeightInPoints((short)14);
+            headWriteFont.setFontHeightInPoints((short) 14);
             // 边框
             headWriteFont.setBold(true);
             headWriteCellStyle.setWriteFont(headWriteFont);

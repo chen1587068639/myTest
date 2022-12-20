@@ -32,10 +32,22 @@ import java.util.*;
 @Slf4j
 class TestApplicationTests {
     @Test
-    void contextLoads(){
+    void contextLoads() {
         //通过SFTP获取远端服务器文件
         List<String> file = SftpUtils.readFile("root", "mfcxgxddc(@zhongzhong)", 22, "8.142.4.4", "/data/jar-server/admin/api/application-prod.yml");
         System.out.println(file);
+    }
+
+    @Test
+    void stringTest() {
+        StringBuffer stringBuffer = new StringBuffer();
+        if (stringBuffer.toString().equals("")) {
+            System.out.println("证明sb不为空!");
+        }
+        if (stringBuffer == null || stringBuffer.length() == 0) {
+            System.out.println("证明sbstringBuffer不为空!");
+        }
+        System.out.println(stringBuffer.lastIndexOf(","));
     }
 
 }
