@@ -32,7 +32,7 @@ public class NettyClientTest {
                             ch.pipeline().addLast(new MyClientHandler());
                         }
                     });
-            System.out.println("客户端准备就绪，随时可以起飞~");
+            System.out.println("客户端准备就绪，随时可以连接~");
             //连接服务端
             ChannelFuture channelFuture = bootstrap.connect("127.0.0.1", 6666).sync();
             //对通道关闭进行监听
@@ -41,6 +41,6 @@ public class NettyClientTest {
             //关闭线程组
             eventExecutors.shutdownGracefully();
         }
-        System.out.println("客户端启动完毕");
+        System.out.println("客户端执行完毕");
     }
 }

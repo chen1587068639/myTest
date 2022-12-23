@@ -64,7 +64,7 @@ public class NettyServerTest {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
-        System.out.println("服务端启动完毕");
+        System.out.println("服务端执行完毕");
     }
 
 

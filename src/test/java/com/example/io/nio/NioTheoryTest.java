@@ -41,14 +41,14 @@ public class NioTheoryTest {
     public void testNIO(){
         //创建堆内内存块HeapByteBuffer
         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        String msg = "java技术爱好者";
+        String msg = "java";
         //ByteBuffer是HeapByteBuffer：HeapByteBuffer所创建的字节缓冲区就是在JVM堆中的
         ByteBuffer wrap = ByteBuffer.wrap(msg.getBytes());
     }
 
     @Test
     public void testByteBuffer(){
-        String msg = "java技术爱好者，起飞！";
+        String msg = "java程序！";
         //创建一个固定大小的buffer(返回的是HeapByteBuffer)
         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
         byte[] bytes = msg.getBytes();
