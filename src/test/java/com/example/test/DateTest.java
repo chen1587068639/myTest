@@ -2,9 +2,11 @@ package com.example.test;
 
 import com.example.test.util.DateUtils;
 import com.example.test.util.HttpUtils;
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -198,4 +200,82 @@ public class DateTest {
         }
     }
 
+
+    @Test
+    public void test222234() throws Exception {
+        Date endTime = new Date();
+        Date startTime = DateUtils.DATE_FORMAT_D.parse("2022--01-01 00:00:00");
+        System.out.println(DateUtils.dateDiff(startTime,endTime));
+    }
+
+    @Test
+    public void test22222() throws InterruptedException, ParseException {
+        String date = "2023-05-05 03";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parse = simpleDateFormat.parse(date);
+        System.out.println(simpleDateFormat.format(parse));
+
+    }
+
+    @Test
+    public void test234(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.get(Calendar.HOUR_OF_DAY);
+        System.out.println(calendar.get(Calendar.HOUR_OF_DAY) + 1);
+    }
+
+    private Long diffMinute(Date startTime,Date endTime){
+        return (endTime.getTime() - startTime.getTime())/(1000*60);
+    }
+
+//
+//    @Test
+//    public void test3452(){
+//        int i = 6;
+//        switch (i){
+//            case i>6:
+//
+//        }
+//    }
+
+    public final static SimpleDateFormat S_Y_M_D_H_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH");
+
+    public final static SimpleDateFormat S_Y_M_D_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH");
+
+    @Test
+    public void test45() throws ParseException {
+        String date = "2022-06-22 23:12:43";
+        Date parssse = S_Y_M_D_H_FORMAT.parse("2022-06-22 23:12:43");
+        System.out.println(S_Y_M_D_H_FORMAT.format(parssse));
+        String format = S_Y_M_D_FORMAT.format(parssse);
+        System.out.println(format);
+        System.out.println(Integer.parseInt(date.substring(date.length() - 2)));
+    }
+
+    /**
+     * 比价金额计算：同一个商品在不同平台的同一个时间有多个价格，请描绘一个品在整个生命周期内的最低价格。
+     *
+     * 例如，商品A
+     * 在平台A 10:00 - 12:00的价格为5
+     * 在平台B 11:30 - 14:30的价格为3
+     * 在平台C 14:00 -16:00的价格为2
+     *
+     * 那么全生命周期的最低价格（忽略平台）为
+     * 10:00 - 11:30的价格为5
+     * 11:30 - 14:00的价格为3
+     * 14:00 - 16:00的价格为2
+     *
+     * 请尝试多种corner case下的解题结果
+     *
+     * 要编码，笔试题要和简历一起推，您看下能做的话再联系
+     */
+//    public void test56() throws ParseException {
+//        CommodityPrice commodityPrice = new CommodityPrice(DateUtils.DATE_FORMAT_D.parse("2023-05-01"));
+//
+//    }
+//
+//    private String countPrice(){
+//
+//    }
 }

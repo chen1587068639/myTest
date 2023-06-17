@@ -1,17 +1,34 @@
-package com.example.test.util;
+package com.example.test.util.file;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.read.builder.ExcelReaderBuilder;
+import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
+import com.alibaba.excel.read.listener.PageReadListener;
+import com.alibaba.excel.read.listener.ReadListener;
+import com.alibaba.excel.read.metadata.ReadSheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.builder.ExcelWriterSheetBuilder;
 import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
+import lombok.Data;
+import org.apache.poi.sl.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExcelUtils {
 
@@ -78,4 +95,53 @@ public class ExcelUtils {
         // 开始导出
         excelWriterSheetBuilder.doWrite(dataList);
     }
+
+    public static List<LinkedHashMap<String,String>> readCSV(List<List<String>> head,File file){
+        ExcelReaderBuilder excelReaderBuilder = EasyExcel.read(file).excelType(ExcelTypeEnum.CSV);
+
+        return excelReaderBuilder.head(head).doReadAllSync();
+    }
+
+    public static List<String> readCSVTest(List<List<String>> head,File file,Integer sheetName){
+        //ExcelReaderSheetBuilder sheet = EasyExcel.read(file).excelType(ExcelTypeEnum.CSV).sheet();
+        ExcelReaderSheetBuilder excelReaderSheetBuilder = EasyExcel.read(file).excelType(ExcelTypeEnum.CSV).sheet(0);
+
+        return excelReaderSheetBuilder.doReadSync();
+    }
+
+    public static List<TestHead> readRd(String filePath){
+        List<TestHead> rtList = new ArrayList<>();
+        //System.out.println(datalist.size()+"=");
+        EasyExcel.read(filePath,TestHead.class,
+                new PageReadListener<TestHead>(rtList::addAll)).sheet().doRead();
+        return rtList;
+    }
+
+    public static List<TestHead> readRd11(String filePath){
+        List<TestHead> rdList = new ArrayList<>();
+        EasyExcel.read(filePath, TestHead.class, new ReadListener<TestHead>() {
+            @Override
+            public void invoke(TestHead data, AnalysisContext context) {
+                rdList.add(data);
+            }
+
+            @Override
+            public void doAfterAllAnalysed(AnalysisContext context) {
+                System.out.println(rdList.size());
+            }
+        }).charset(StandardCharsets.UTF_8).sheet().doRead();
+        return rdList;
+    }
+
+    public static List<TestHead> readRt(String filePath){
+        List<TestHead> rtList = new ArrayList<>();
+        //System.out.println(datalist.size()+"=");
+        EasyExcel.read(filePath, TestHead.class,
+                new PageReadListener<TestHead>(rtList::addAll)).sheet().doRead();
+        //System.out.println(rtList.size()+"==");
+        return rtList;
+    }
+
+
+
 }

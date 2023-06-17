@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.collection;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;

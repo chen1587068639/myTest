@@ -13,6 +13,7 @@ public class DateUtils {
     public final static SimpleDateFormat DATE_FORMAT_CN = new SimpleDateFormat("yyyy年MM月dd日HH时mm分ss秒");
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
     public static final SimpleDateFormat DATE_FORMAT_D = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat D_F = new SimpleDateFormat("yyyy-MM-dd");
 
 
     /**
@@ -274,4 +275,26 @@ public class DateUtils {
         return season;
     }
 
+    public static Long diffMinute(Date startTime,Date endTime){
+        return (endTime.getTime() - startTime.getTime())/(1000*60);
+    }
+
+    public static String dateDiff(Date startTime, Date endTime) throws Exception {
+        long nd = 1000 * 24 * 60 * 60; //一天的毫秒数
+        long nh = 1000 * 60 * 60;//一小时的毫秒数据
+        long nm = 1000 * 60; //一分钟毫秒数
+        long ns = 1000;
+        long diff;
+        //获得两个时间的毫秒时间差异
+        diff = endTime.getTime() - startTime.getTime();
+        // 计算差多少天
+        long day = diff / nd;
+        // 计算差多少小时
+        long hour = diff % nd / nh;
+        // 计算差多少分钟
+        long min = diff % nd % nh / nm;
+        // 计算差多少秒//输出结果
+        long sec = diff % nd % nh % nm / ns;
+        return day + "天" + hour + "时" + min + "分" + sec + "秒";
+    }
 }

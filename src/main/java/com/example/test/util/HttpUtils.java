@@ -45,7 +45,7 @@ public class HttpUtils {
      */
     public static String getHttp(String url) {
         //创建htpp客户端
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
         //CloseableHttpResponse response = null;
         try {

@@ -11,6 +11,9 @@ import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.test.util.*;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -50,4 +53,25 @@ class TestApplicationTests {
         System.out.println(stringBuffer.lastIndexOf(","));
     }
 
+    @Test
+    public void testWriteFile() throws Exception {
+        String host = "39.99.198.220";
+        int port = 22;
+        String username = "root";
+        String password = "mfcxgxddc(@zz)";
+
+        String remoteDirectoryPath = "/path/";
+        String remoteFilePath = "/path/file";
+        String content = "This is a test file.";
+
+        ChannelSftp sftp = SftpUtils.login(username,host, port, password);
+        try {
+            SftpUtils.createRemoteDirectoryIfNotExist(sftp,remoteDirectoryPath);
+            SftpUtils.createRemoteFile(sftp,remoteFilePath, content);
+        } catch (SftpException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            sftp.disconnect();
+        }
+    }
 }

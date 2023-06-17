@@ -1,12 +1,8 @@
 package com.example.test.util;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
+import com.jcraft.jsch.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,5 +93,51 @@ public class SftpUtils {
             e.printStackTrace();
         }
         return listString;
+    }
+
+
+    /**
+     * 通过传入参数构建sftp连接，获取文件数据，关闭连接
+     *
+     * @param userName 账号
+     * @param password 密码
+     * @param port 端口
+     * @param host ip
+     * @param directory 目录
+     * @param fileName 文件名
+     * @return
+     */
+    public static List<String> writeFile(String userName, String password, int port, String host, String directory,String fileName) {
+        //缓存流
+        OutputStream outputStream = null;
+        List<String> listString = new ArrayList<>();
+        try {
+            //登陆服务器
+            ChannelSftp sftp = SftpUtils.login(userName, host, port, password);
+
+            //sftp.put(new FileInputStream(localPath), remotePath);
+            sftp.mkdir(directory);
+            outputStream.close();
+            //退出连接
+            SftpUtils.logOut();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listString;
+    }
+
+    public static void createRemoteDirectoryIfNotExist(ChannelSftp sftp,String remoteDirectoryPath) throws SftpException {
+        try {
+            sftp.cd(remoteDirectoryPath);
+        } catch (SftpException e) {
+            //目录不存在
+            sftp.mkdir(remoteDirectoryPath);
+            sftp.cd(remoteDirectoryPath);
+        }
+    }
+
+    public static void createRemoteFile(ChannelSftp sftp,String remoteFilePath, String content) throws IOException, SftpException {
+        InputStream inputStream = new ByteArrayInputStream(content.getBytes());
+        sftp.put(inputStream, remoteFilePath);
     }
 }

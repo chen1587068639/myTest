@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.test.spring;
 
 import com.example.test.util.StringUtils;
 import lombok.Data;
@@ -258,5 +258,12 @@ public class StringTest {
             area = (Sum - (size - 2) * Math.PI) * Radius * Radius;
         }
         return Math.abs(area);
+    }
+
+    @Test
+    public void testkm(){
+        String date = "2023-06-01 23:00:00";
+        String substring = date.substring(date.length() - 8, date.length() - 6);
+        System.out.println(substring);
     }
 }

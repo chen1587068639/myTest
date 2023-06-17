@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.io.protocol;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

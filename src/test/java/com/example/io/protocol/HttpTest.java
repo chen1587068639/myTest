@@ -1,4 +1,4 @@
-package com.example.test;
+package com.example.io.protocol;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.test.util.DateUtils;
@@ -17,6 +17,13 @@ import java.util.Map;
 @Slf4j
 @SpringBootTest
 public class HttpTest {
+
+    @Test
+    void weatherAPI(){
+
+        String http = HttpUtils.getHttp("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m");
+        System.out.println(http);
+    }
 
     @Test
     void httpTest() {
