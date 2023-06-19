@@ -28,6 +28,10 @@ public class SortAlgorithm {
         System.out.println("拷贝数据组2:" + copyTwoList);
         insertSort(copyTwoList);
         System.out.println(copyTwoList);
+        List<Integer> copyThreeList = new ArrayList<>(ListCommon.arrayList);
+        System.out.println("拷贝数据组2:" + copyThreeList);
+        mergeSort(copyThreeList);
+        System.out.println(copyThreeList);
     }
 
     /**
@@ -50,7 +54,7 @@ public class SortAlgorithm {
     }
 
     /**
-     * 冒泡排序
+     * 冒泡排序(n^2)
      * @param arrayList 数组
      */
     public static void  bubblingSort(List<Integer> arrayList){
@@ -67,7 +71,7 @@ public class SortAlgorithm {
     }
 
     /**
-     * 插入排序
+     * 插入排序：O(n^2)
      * @param arrayList 数组
      */
     public static void insertSort(List<Integer> arrayList) {
@@ -84,6 +88,61 @@ public class SortAlgorithm {
         System.out.println("插入排序循环了:" + n + "次");
     }
 
+    /**
+     * 归并排序算法：n * log N
+     * 把数组分成两个子数组，使用递归的方式排序
+     * @param arrayList 数组
+     */
+    private static void mergeSort(List<Integer> arrayList) {
+        process(arrayList,0,arrayList.size()-1);
+    }
+
+    private static void process(List<Integer> arrayList ,int i,int j) {
+        if (i == j) {
+            return;
+        }
+        int middleIndex = (i + j) >> 1;
+        process(arrayList,i,middleIndex);
+        process(arrayList,middleIndex + 1,j);
+        merge(arrayList,i,middleIndex,j);
+    }
+
+    /**
+     * 两个数组合并
+     * @param arrayList 数据
+     * @param i 开始索引
+     * @param middleIndex 中间索引
+     * @param j 结束索引
+     */
+    private static void merge(List<Integer> arrayList,int i ,int middleIndex,int j) {
+        if (i == j) {
+            return;
+        }
+        List<Integer> helpList = new ArrayList<>(j - i + 1);
+        //help数组下一个应该插入的索引位置
+        int l1 = i;
+        int l2 = middleIndex + 1;
+        while (l1 <= middleIndex && l2 <= j) {
+            if (arrayList.get(l1) < arrayList.get(l2)) {
+                helpList.add(arrayList.get(l1));
+                l1++;
+            } else {
+                helpList.add(arrayList.get(l2));
+                l2++;
+            }
+        }
+        while (l1 <= middleIndex) {
+            helpList.add(arrayList.get(l1));
+            l1++;
+        }
+        while (l2 <= j) {
+            helpList.add(arrayList.get(l2));
+            l2++;
+        }
+        for (int k = 0; k < helpList.size(); k++) {
+            arrayList.set(i + k,helpList.get(k));
+        }
+    }
 
     /**
      * 交换数组元素
