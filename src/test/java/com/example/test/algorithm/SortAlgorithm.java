@@ -182,6 +182,7 @@ public class SortAlgorithm {
         long pivot = arr[j];
         int left = i;
         int right = j - 1;
+        //使用 left <= right 条件可以处理边界情况
         while (left <= right) {
             //arr[left] 大于pivot的时候，跳出循环
             while (left <= right && arr[left] <= pivot) {
