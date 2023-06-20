@@ -1,6 +1,8 @@
 package com.example.test.interview;
 
 import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
@@ -20,12 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @SpringBootTest
 public class PriceTest {
 
-    public final static SimpleDateFormat S_Y_M_D_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    /**
-     * 商品价格数组：写后读先
-     */
-    public CopyOnWriteArrayList<CommodityPrice> commodityPriceList = new CopyOnWriteArrayList<>();
+    public final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 比价金额计算：同一个商品在不同平台的同一个时间有多个价格，请描绘一个品在整个生命周期内的最低价格。
@@ -40,37 +37,71 @@ public class PriceTest {
      * 11:30 - 14:00的价格为3
      * 14:00 - 16:00的价格为2
      *
-     * 请尝试多种corner case下的解题结果
-     *
-     * 要编码，笔试题要和简历一起推，您看下能做的话再联系
      */
+    @Test
     public void test56() throws ParseException {
-        CommodityPrice commodityPriceByA = new CommodityPrice(S_Y_M_D_FORMAT.parse("2023-05-01 10:00:00"),S_Y_M_D_FORMAT.parse("2023-05-02 12:00:00"),new BigDecimal(3));
-        CommodityPrice commodityPriceByB = new CommodityPrice(S_Y_M_D_FORMAT.parse("2023-05-01 11:30:00"),S_Y_M_D_FORMAT.parse("2023-05-02 14:30:00"),new BigDecimal(3));
-        CommodityPrice commodityPriceByC = new CommodityPrice(S_Y_M_D_FORMAT.parse("2023-05-01 14:00:00"),S_Y_M_D_FORMAT.parse("2023-05-02 16:00:00"),new BigDecimal(3));
+        CommodityPrice commodityPriceByA = new CommodityPrice(DATE_FORMAT.parse("2023-05-01 10:00:00"),DATE_FORMAT.parse("2023-05-03 10:30:00"),10);
+        CommodityPrice commodityPriceByB = new CommodityPrice(DATE_FORMAT.parse("2023-05-01 11:30:00"),DATE_FORMAT.parse("2023-05-02 14:30:00"),4);
+        CommodityPrice commodityPriceByC = new CommodityPrice(DATE_FORMAT.parse("2023-05-02 15:00:00"),DATE_FORMAT.parse("2023-05-02 16:00:00"),8);
         List<CommodityPrice> commodityPriceList = new ArrayList<>();
-
+        commodityPriceList.add(commodityPriceByA);
+        commodityPriceList.add(commodityPriceByB);
+        commodityPriceList.add(commodityPriceByC);
+        List<CommodityPrice> minimumPrices = calculateMinimumPrices(commodityPriceList);
+        for (CommodityPrice price : minimumPrices) {
+            System.out.println(DATE_FORMAT.format(price.getStartTime()) + " - " + DATE_FORMAT.format(price.getEndTime()) + " : " + price.getPrice());
+        }
     }
-    private void countPrice(List<CommodityPrice> commodityPriceList){
-        //排序
-        commodityPriceList.sort(Comparator.comparing(c -> (Date)c.getStartTime()));
-        commodityPriceList.forEach(commodityPrice -> {
 
-        });
+
+    public static List<CommodityPrice> calculateMinimumPrices(List<CommodityPrice> prices) {
+        List<Date> timePoints = new ArrayList<>();
+        for (CommodityPrice price : prices) {
+            timePoints.add(price.getStartTime());
+            timePoints.add(price.getEndTime());
+        }
+
+        timePoints.sort(Comparator.naturalOrder());
+
+        List<CommodityPrice> minimumPrices = new ArrayList<>();
+
+        for (int i = 0; i < timePoints.size() - 1; i++) {
+            Date startTime = timePoints.get(i);
+            Date endTime = timePoints.get(i + 1);
+
+            int minimumPrice = Integer.MAX_VALUE;
+
+            for (CommodityPrice price : prices) {
+                if (price.getStartTime().compareTo(startTime) <= 0 && price.getEndTime().compareTo(endTime) >= 0) {
+                    minimumPrice = Math.min(minimumPrice, price.getPrice());
+                }
+            }
+            if (minimumPrice != Integer.MAX_VALUE) {
+                if (minimumPrices.size() > 0 && minimumPrice == minimumPrices.get(minimumPrices.size() - 1).getPrice() && minimumPrices.get(minimumPrices.size() - 1).getEndTime().equals(startTime)) {
+                    minimumPrices.get(minimumPrices.size() - 1).setEndTime(endTime);
+                } else {
+                    minimumPrices.add(new CommodityPrice(startTime, endTime, minimumPrice));
+                }
+            }
+
+        }
+
+        return minimumPrices;
     }
+
 
 }
 @Data
 class CommodityPrice{
-    Date StartTime;
+    Date startTime;
     Date endTime;
-    BigDecimal price;
+    int price;
 
     public CommodityPrice() {
     }
 
-    public CommodityPrice(Date startTime, Date endTime, BigDecimal price) {
-        StartTime = startTime;
+    public CommodityPrice(Date startTime, Date endTime, Integer price) {
+        this.startTime = startTime;
         this.endTime = endTime;
         this.price = price;
     }

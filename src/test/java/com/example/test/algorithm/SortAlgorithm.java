@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 排序算法
@@ -17,21 +19,25 @@ public class SortAlgorithm {
 
     @Test
     public void selectSort(){
-        List<Integer> copyList = new ArrayList<>(ListCommon.arrayList);
-        List<Integer> copyTwoList = new ArrayList<>(ListCommon.arrayList);
-        System.out.println("原始数据组:" + ListCommon.arrayList);
-        bubblingSort(ListCommon.arrayList);
-        System.out.println(ListCommon.arrayList);
-        System.out.println("拷贝数据组:" + copyList);
-        selectSort(copyList);
-        System.out.println(copyList);
-        System.out.println("拷贝数据组2:" + copyTwoList);
-        insertSort(copyTwoList);
-        System.out.println(copyTwoList);
-        List<Integer> copyThreeList = new ArrayList<>(ListCommon.arrayList);
-        System.out.println("拷贝数据组2:" + copyThreeList);
-        mergeSort(copyThreeList);
-        System.out.println(copyThreeList);
+//        List<Integer> copyList = new ArrayList<>(ListCommon.arrayList);
+//        List<Integer> copyTwoList = new ArrayList<>(ListCommon.arrayList);
+//        System.out.println("原始数据组:" + ListCommon.arrayList);
+//        bubblingSort(ListCommon.arrayList);
+//        System.out.println(ListCommon.arrayList);
+//        System.out.println("拷贝数据组:" + copyList);
+//        selectSort(copyList);
+//        System.out.println(copyList);
+//        System.out.println("拷贝数据组2:" + copyTwoList);
+//        insertSort(copyTwoList);
+//        System.out.println(copyTwoList);
+//        List<Integer> copyThreeList = new ArrayList<>(ListCommon.arrayList);
+//        System.out.println("拷贝数据组2:" + copyThreeList);
+//        mergeSort(copyThreeList);
+//        System.out.println(copyThreeList);
+        long[] arr = {3,7,2,9,0,1,8,4,6,5};
+        quickSort(arr,0,arr.length-1);
+        System.out.println(Arrays.toString(arr));
+
     }
 
     /**
@@ -145,6 +151,43 @@ public class SortAlgorithm {
     }
 
     /**
+     * 快速排序：
+     * @param arr 数组
+     */
+    private void quickSort(long[] arr,int i,int j) {
+        int pivot = partition(arr, i, j);
+        quickSort(arr,i,pivot);
+        quickSort(arr,pivot + 1,j);
+    }
+
+    private int partition(long[] arr,int i,int j) {
+        Random random = new Random();
+        //随机选取基准索引;不能等于尾部的指针
+        int pivot = random.nextInt(arr.length - 1);
+        //指向左侧开头的指针
+        int left = i;
+        //指向右侧结尾的指针
+        int right = j;
+        //当两侧指针未相等时，找出
+        while (left < right) {
+            //先移动尾部索引，向前,直到找到大于基准值的索引停止
+            while (left < right && arr[right] > arr[pivot]) {
+                right--;
+            }
+            //先移动头部索引，向后,直到找到小于基准值的索引停止
+            while (left < right && arr[left] < arr[pivot]) {
+                left++;
+            }
+            //把两者交换
+            if (left < right) {
+                swap(arr,left,right);
+            }
+        }
+        swap(arr,pivot,left);
+        return left;
+    }
+
+    /**
      * 交换数组元素
      * @param arrayList 数组
      * @param i 索引
@@ -169,5 +212,17 @@ public class SortAlgorithm {
         arrayList.set(j,arrayList.get(i) ^ arrayList.get(j));
         //[i] = i ^ j ^ i  = j
         arrayList.set(i,arrayList.get(i) ^ arrayList.get(j));
+    }
+
+    /**
+     * 交换数组中的元素
+     * @param arr 数组
+     * @param i target
+     * @param j move
+     */
+    private void swap(long[] arr,int i,int j) {
+        arr[i] = arr[i] ^ arr[j];
+        arr[j] = arr[i] ^ arr[j];
+        arr[i] = arr[i] ^ arr[j];
     }
 }
