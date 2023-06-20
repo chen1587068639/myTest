@@ -34,7 +34,7 @@ public class SortAlgorithm {
 //        System.out.println("拷贝数据组2:" + copyThreeList);
 //        mergeSort(copyThreeList);
 //        System.out.println(copyThreeList);
-        long[] arr = {3,7,2,9,0,1,8,4,6,5};
+        long[] arr = {3,7,2,9,0,1,5,5,8,4,6,5};
         quickSort(arr,0,arr.length-1);
         System.out.println(Arrays.toString(arr));
 
@@ -155,35 +155,53 @@ public class SortAlgorithm {
      * @param arr 数组
      */
     private void quickSort(long[] arr,int i,int j) {
-        int pivot = partition(arr, i, j);
-        quickSort(arr,i,pivot);
+        if (i >= j) {
+            return;
+        }
+        Random random = new Random();
+        int pivotIndex = random.nextInt(j - i + 1) + i;
+        int pivot = partition(arr, i, j,pivotIndex);
+        // 对基准值左侧和右侧的子数组递归调用快速排序
+        quickSort(arr,i,pivot - 1);
         quickSort(arr,pivot + 1,j);
     }
 
-    private int partition(long[] arr,int i,int j) {
-        Random random = new Random();
-        //随机选取基准索引;不能等于尾部的指针
-        int pivot = random.nextInt(arr.length - 1);
-        //指向左侧开头的指针
+    /**
+     * 根据基准索引分片，基准索引左边的小于等于基准值，右边的大于等于基准值
+     * @param arr 数组
+     * @param i
+     * @param j
+     * @return
+     */
+
+    private int partition(long[] arr, int i, int j, int pivotIndex) {
+        // 将基准值移到结尾
+        if (pivotIndex != j) {
+            swap(arr, pivotIndex, j);
+        }
+        long pivot = arr[j];
         int left = i;
-        //指向右侧结尾的指针
-        int right = j;
-        //当两侧指针未相等时，找出
-        while (left < right) {
-            //先移动尾部索引，向前,直到找到大于基准值的索引停止
-            while (left < right && arr[right] > arr[pivot]) {
-                right--;
-            }
-            //先移动头部索引，向后,直到找到小于基准值的索引停止
-            while (left < right && arr[left] < arr[pivot]) {
+        int right = j - 1;
+        while (left <= right) {
+            //arr[left] 大于pivot的时候，跳出循环
+            while (left <= right && arr[left] <= pivot) {
+                // 先移动头部索引，向后，直到找到大于基准值的索引停止
                 left++;
             }
-            //把两者交换
+            //arr[right] 小于pivot的时候，跳出循环
+            while (left <= right && arr[right] >= pivot) {
+                // 先移动尾部索引，向前，直到找到小于基准值的索引停止
+                right--;
+            }
             if (left < right) {
-                swap(arr,left,right);
+                swap(arr, left, right);
             }
         }
-        swap(arr,pivot,left);
+        // 将基准值放到正确的位置
+        if (left != j) {
+            swap(arr, left, j);
+        }
+
         return left;
     }
 
