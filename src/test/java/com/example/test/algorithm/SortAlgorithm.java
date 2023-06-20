@@ -4,10 +4,7 @@ import com.example.test.common.ListCommon;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 排序算法
@@ -16,6 +13,7 @@ import java.util.Random;
  */
 @SpringBootTest
 public class SortAlgorithm {
+
 
     @Test
     public void selectSort(){
@@ -34,15 +32,19 @@ public class SortAlgorithm {
 //        System.out.println("拷贝数据组2:" + copyThreeList);
 //        mergeSort(copyThreeList);
 //        System.out.println(copyThreeList);
+//        quickSort(arr,0,arr.length-1);
+//        System.out.println(Arrays.toString(arr));
         long[] arr = {3,7,2,9,0,1,5,5,8,4,6,5};
-        quickSort(arr,0,arr.length-1);
+        heapSort(arr);
         System.out.println(Arrays.toString(arr));
 
     }
 
     /**
      * 选择排序算法
-     * 时间负责度：n^2
+     * 时间复杂度：n^2
+     * 稳定性：不稳定
+     * 空间复杂度：O(1)
      * @param arrayList 数组
      */
     public static void selectSort(List<Integer> arrayList) {
@@ -60,7 +62,10 @@ public class SortAlgorithm {
     }
 
     /**
-     * 冒泡排序(n^2)
+     * 冒泡排序
+     * 时间复杂度：O(n^2)
+     * 稳定性：稳定
+     * 空间复杂度：O(1)
      * @param arrayList 数组
      */
     public static void  bubblingSort(List<Integer> arrayList){
@@ -77,7 +82,10 @@ public class SortAlgorithm {
     }
 
     /**
-     * 插入排序：O(n^2)
+     * 插入排序：
+     * 时间复杂度：O(n^2)
+     * 稳定性：稳定
+     * 空间复杂度：O(1)
      * @param arrayList 数组
      */
     public static void insertSort(List<Integer> arrayList) {
@@ -95,7 +103,10 @@ public class SortAlgorithm {
     }
 
     /**
-     * 归并排序算法：n * log N
+     * 归并排序算法：
+     * 时间复杂度：O(n * log N)
+     * 稳定性：稳定
+     * 空间复杂度：O(n)
      * 把数组分成两个子数组，使用递归的方式排序
      * @param arrayList 数组
      */
@@ -152,6 +163,9 @@ public class SortAlgorithm {
 
     /**
      * 快速排序：
+     * 时间复杂度：O(n * log n)
+     * 稳定性：不稳定
+     * 空间复杂度：O(log n)
      * @param arr 数组
      */
     private void quickSort(long[] arr,int i,int j) {
@@ -164,6 +178,27 @@ public class SortAlgorithm {
         // 对基准值左侧和右侧的子数组递归调用快速排序
         quickSort(arr,i,pivot - 1);
         quickSort(arr,pivot + 1,j);
+    }
+
+
+    /**
+     * 堆排序
+     * 时间复杂度：O(n * log n)
+     * 稳定性：不稳定
+     * 空间复杂度：O(1)
+     * @param arr 数组
+     */
+    private void heapSort(long[] arr) {
+        Queue<Long> heap = new PriorityQueue<>();
+        for (long l : arr) {
+            heap.add(l);
+        }
+        for (int i = 0; i < arr.length; i++) {
+            if (!heap.isEmpty()) {
+                arr[i] = heap.poll();
+            }
+        }
+
     }
 
     /**

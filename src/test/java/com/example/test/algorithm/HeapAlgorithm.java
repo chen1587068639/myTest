@@ -49,7 +49,7 @@ public class HeapAlgorithm {
      * 由大到小
      */
     @Test
-    public void orderAreay() {
+    public void orderArray() {
         while (!bigHeap.isEmpty()) {
             System.out.println(bigHeap.poll());
         }
