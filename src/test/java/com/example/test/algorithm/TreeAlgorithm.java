@@ -1,5 +1,6 @@
 package com.example.test.algorithm;
 
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -7,6 +8,10 @@ import java.util.*;
 
 /**
  * 树算法
+ * 完全二叉树：换句话说，对于完全二叉树，从左到右、从上到下依次填充节点，不留下空缺。
+ * 平衡二叉树：左右子树之间的高度差值不超过1
+ * 满二叉树：每一层的节点都是满的
+ * 搜索二叉树：左节点小于头节点，右节点大于头节点
  * @Author: chengw
  * @Date: 2023/6/22 下午3:35
  */
@@ -29,6 +34,7 @@ public class TreeAlgorithm {
         head.left.left = new TreeNode<>(2);
         head.left.right = new TreeNode<>(4);
         head.left.left.left = new TreeNode<>(1);
+//        head.left.left.left.left = new TreeNode<>(10);
         head.right = new TreeNode<>(7);
         head.right.left = new TreeNode<>(6);
         head.right.right = new TreeNode<>(8);
@@ -47,6 +53,7 @@ public class TreeAlgorithm {
         TreeNode<Integer> treeNodeThree = new TreeNode<>(3);
         treeNodeOne.left = treeNodeTwo;
         treeNodeOne.right = treeNodeThree;
+
         //第三层
         treeNodeTwo.left = new TreeNode<>(4);
         treeNodeTwo.right = new TreeNode<>(5);
@@ -55,11 +62,11 @@ public class TreeAlgorithm {
         //        1
         //    2       3
         //  4   5   6   7
-//        stackErgodicMiddle(treeNodeOne);
+        System.out.println(isFullTree(treeNodeThree));
 //        recursion(treeNodeOne);
 //        countWidth(treeNodeOne);
-        Boolean searchTree = isSearchTree(head);
-        System.out.println(searchTree);
+//        Boolean searchTree = isSearchTree(head);
+//        System.out.println(searchTree);
 
     }
 
@@ -145,7 +152,6 @@ public class TreeAlgorithm {
             return;
         }
         Stack<TreeNode<Integer>> stack = new Stack<>();
-
         while (!stack.isEmpty() || head != null) {
             if (null != head) {
                 stack.push(head);
@@ -157,6 +163,29 @@ public class TreeAlgorithm {
             }
 
         }
+    }
+
+    /**
+     * 检查是不是搜索树：栈的方式
+     * @param head
+     * @return
+     */
+    private static Boolean checkSearchTree(TreeNode<Integer> head) {
+        if (head == null) {
+            return true;
+        }
+        Stack<TreeNode<Integer>> stack = new Stack<>();
+        while (!stack.isEmpty() || head != null) {
+            if (null != head) {
+                stack.add(head);
+                head = head.left;
+            } else {
+                head = stack.pop();
+                System.out.println(head.item);
+                head = head.right;
+            }
+        }
+        return false;
     }
 
     /**
@@ -252,47 +281,157 @@ public class TreeAlgorithm {
         return isSearchTree(head.right);
     }
 
+
     /**
-     * 返回最大值和最小值
-     * 头节点的左子树返回最大值
-     * 头节点的友子树返回最小值
-     * 然后判断：如果
+     * 平衡二叉树的返回值
      */
-    private static int min = Integer.MAX_VALUE;
-    private static int max = Integer.MIN_VALUE;
-//    private Boolean isSearchTreeByLoop(TreeNode<Integer> head) {
-//        if (head == null) {
-//            return true;
-//        }
-//
-//        while (head != null) {
-//
-//            if ()
-//        }
-//    }
+    static class ReturnData {
+        public boolean isBalanced;
+        public int height;
+        public ReturnData (boolean isBalanced,int height) {
+            this.isBalanced = isBalanced;
+            this.height = height;
+        }
+    }
+
     /**
-     * 判断是否是完全二叉树：
+     * 判断是不是平衡二叉树：
+     * 使用递归的方式：
+     * 利用树形DP（Dynamic Programming）方式求解
      * @param head 头节点
      * @return
      */
-//    private Boolean isCompleteTree(TreeNode<Integer> head) {
-//        if (head)
+    private ReturnData isBalanceTree(TreeNode<Integer> head) {
+        //head = null 则是完全二叉树
+        if (head == null) {
+            return new ReturnData(true,0);
+        }
+        //递归左子树
+        ReturnData leftCompleteTree = isBalanceTree(head.left);
+
+        //递归右子树
+        ReturnData rightCompleteTree = isBalanceTree(head.right);
+        //高度
+        int height = Math.max(leftCompleteTree.height,rightCompleteTree.height) + 1;
+        //是不是完全二叉树:如果左子树和右子树是完全二叉树，然后左子树的高度和右子树的高度相差小于2，则，该节点的子树为平衡二叉树
+        boolean flag = leftCompleteTree.isBalanced && rightCompleteTree.isBalanced && Math.abs(leftCompleteTree.height - rightCompleteTree.height)  < 2;
+        return new ReturnData(flag,height);
+    }
+
+    private static int nodes = 0;
+
+    private Boolean isFullTree(TreeNode<Integer> head) {
+        if (head == null) {
+            return true;
+        }
+        FullReturn fullReturn = countNodes(head);
+        return fullReturn.nodes == ((1 << fullReturn.height) - 1);
+    }
+    static class FullReturn {
+        public Integer height;
+        public Integer nodes;
+        FullReturn(int height,int nodes) {
+            this.height = height;
+            this.nodes = nodes;
+        }
+    }
+    /**
+     * 判断是不是满二叉树:
+     * 使用树形DP（Dynamic Programming）方式求解
+     * 高度，和节点个数
+     * @param head
+     */
+    private FullReturn countNodes(TreeNode<Integer> head) {
+        if (head == null) {
+            return new FullReturn(0,0);
+        }
+        FullReturn leftFullReturn = countNodes(head.left);
+        FullReturn rightFullReturn = countNodes(head.right);
+        //高度
+        int height = Math.max(leftFullReturn.height, rightFullReturn.height) + 1;
+        int nodes = leftFullReturn.nodes + rightFullReturn.nodes + 1;
+        return new FullReturn(height,nodes);
+    }
+
+    /**
+     * 判断是不是完全二叉树
+     * 利用树形DP（Dynamic Programming）方式求解：头节点下面左右节点的个数，
+     * 循环：
+     * @param head 头节点
+     * @return
+     */
+//    private static Boolean isCompleteTree(TreeNode<Integer> head) {
+//
 //    }
 
-
-
-    //判断是不是平衡二叉树
-    //判断是不是满二叉树
     //树形DP
-
     //分布式锁，分布式事务
-    //找两个节点的公共祖先节点：利用递归把节点和节点的夫节点放到map中
+
+    /**
+     * 找两个节点的公共祖先节点：利用递归把节点和节点的父节点放到map中
+     * @param head
+     * @param one
+     * @param two
+     */
+    private void publicFatherNode(TreeNode<Integer> head,TreeNode<Integer> one,TreeNode<Integer> two) {
+        //key:子节点，value：父节点
+        if (head == null || head == one || head == two) {
+            System.out.println("公共父节点是head");
+        }
+        Map<TreeNode<Integer>,TreeNode<Integer>> map = new HashMap<>();
+        map.put(head,head);
+        f(head,map);
+        TreeNode<Integer> currentNode = one;
+        HashSet<TreeNode<Integer>> linked = new HashSet<>();
+        linked.add(one);
+        while(map.get(currentNode) != currentNode) {
+            linked.add(map.get(currentNode));
+            currentNode = map.get(currentNode);
+        }
+        linked.add(head);
+        currentNode = two;
+        while (map.get(currentNode) != currentNode) {
+            if (linked.contains(currentNode)) {
+                System.out.println("找到了公共节点:" + currentNode);
+            }
+            currentNode = map.get(currentNode);
+        }
+
+    }
+    private void f(TreeNode<Integer> head,Map<TreeNode<Integer>,TreeNode<Integer>> map) {
+        if (head == null) {
+            return;
+        }
+        f(head.left,map);
+        f(head.right,map);
+        map.put(head.left,head);
+        map.put(head.right,head);
+    }
 
     //二叉树的字符串的序列化和反序列化
 
+    @Test
+    public void test() {
+        p(true,1,3);
+    }
+
     //请把一段纸条竖着放在桌子上，然后从纸条的下边向上方对折1次，压出折痕后展开。
     // 例如:N=1时，打印: down N=2时，打印: down down up。：
+    public static void print() {
+        p(true,1,3);
+    }
 
+
+    //递归过程中。来到了某一个节点
+    //i是节点的层数，一共n层，down == true down; down = false up
+    public static void p(boolean down,int i,int n) {
+        if(i > n) {
+            return;
+        }
+        p(true,i+1,n);
+        System.out.println(down ? "down" : "up");
+        p(false,i+1,n);
+    }
 
 
 }
