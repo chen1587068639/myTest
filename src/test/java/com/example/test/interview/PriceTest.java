@@ -22,6 +22,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @SpringBootTest
 public class PriceTest {
 
+    @Data
+    public static class CommodityPrice{
+        Date startTime;
+        Date endTime;
+        int price;
+
+        public CommodityPrice() {
+        }
+
+        public CommodityPrice(Date startTime, Date endTime, Integer price) {
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.price = price;
+        }
+    }
+
     public final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
@@ -62,16 +78,23 @@ public class PriceTest {
         }
 
         timePoints.sort(Comparator.naturalOrder());
-
+        //根据结束时间排序
+        prices.sort(Comparator.comparing(CommodityPrice::getEndTime));
         List<CommodityPrice> minimumPrices = new ArrayList<>();
-
+        int currentIndex = 0;
         for (int i = 0; i < timePoints.size() - 1; i++) {
+
             Date startTime = timePoints.get(i);
             Date endTime = timePoints.get(i + 1);
 
             int minimumPrice = Integer.MAX_VALUE;
 
-            for (CommodityPrice price : prices) {
+            for (int j = currentIndex; j < prices.size(); j++) {
+                CommodityPrice price = prices.get(j);
+                if (price.getEndTime().compareTo(startTime) < 0) {
+                    currentIndex++;
+                    continue;
+                }
                 if (price.getStartTime().compareTo(startTime) <= 0 && price.getEndTime().compareTo(endTime) >= 0) {
                     minimumPrice = Math.min(minimumPrice, price.getPrice());
                 }
@@ -91,18 +114,4 @@ public class PriceTest {
 
 
 }
-@Data
-class CommodityPrice{
-    Date startTime;
-    Date endTime;
-    int price;
 
-    public CommodityPrice() {
-    }
-
-    public CommodityPrice(Date startTime, Date endTime, Integer price) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.price = price;
-    }
-}
