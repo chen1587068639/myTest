@@ -14,7 +14,6 @@ import java.util.*;
  * @Author: chengw
  * @Date: 2022/12/28 上午11:15
  */
-@Slf4j
 @SpringBootTest
 public class FileReadTest {
 //
@@ -173,4 +172,32 @@ public class FileReadTest {
         return iCCIDSet222;
     }
 
+    @Test
+    public void testCSVRead22233(){
+//        File file = new File("/Users/chengw/myWorld/团泊数据.xlsx");
+//        List<List<String>> head = new ArrayList<>();
+//        List<String> list = Arrays.asList("停车点ID","取车数量","还车数量","取车方差","还车方差","取车总数","还车总数","取车平均数","还车平均数","统计时间");
+//        list.forEach(c -> head.add(Collections.singletonList(c)));
+//
+//        List<LinkedHashMap<String,String>> objects = ExcelUtils.readCSV(head,file);
+//        List<List<String>> resultList = new ArrayList<>();
+//        objects.forEach(c -> resultList.add((List<String>)c.values()));
+//        LinkedHashMap<String,String> strings = objects.get(0);
+//        System.out.println(strings.get(5));
+//        System.out.println(resultList);
+
+        File twoFile = new File("/Users/chengw/myWorld/团泊停车数据.xlsx");
+        List<List<String>> twohead = new ArrayList<>();
+        List<String> twolist = Arrays.asList("id","name");
+        twolist.forEach(c -> twohead.add(Collections.singletonList(c)));
+
+
+        List<LinkedHashMap<String,String>> objects = ExcelUtils.readCSV(twohead,twoFile);
+        List<List<String>> resultList = new ArrayList<>();
+        objects.forEach(c -> resultList.add((List<String>)c.values()));
+        LinkedHashMap<String,String> strings = objects.get(0);
+        System.out.println(resultList);
+        System.out.println(twolist);
+
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.test.algorithm;
+package com.example.test.algorithm.tree;
 
 import lombok.Data;
 import org.junit.jupiter.api.Test;

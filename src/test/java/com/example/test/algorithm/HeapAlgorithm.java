@@ -46,6 +46,55 @@ public class HeapAlgorithm {
     }
 
     /**
+     * 一组动态数字，求中位数
+     * 一半数据进小根堆（小根堆存储大数字），一半进大根堆（大根堆进小数字），所以大根堆和小根堆的堆顶是中位数
+     */
+
+    /**
+     * 给你n个项目和项目对应的成本，收益
+     * 限制只能做n，你目前的成本是m，求最大收益
+     * @param init
+     * @param programNum
+     * @param profits
+     * @param capital
+     * @return
+     */
+//    private static int findMaxProfit(int init,int programNum,int[] profits,int[] capital) {
+//        for (int i = 0; i < capital.length; i++) {
+//            heap.add(capital[i]);
+//        }
+//        for (int i = 0; i < programNum; i++) {
+//            //解锁项目
+////            while (!heap.isEmpty() && heap)
+//        }
+//    }
+
+    /**
+     * 霍夫曼编码问题
+     * 赫夫曼编码的具体方法：先按出现的概率大小排队，把两个最小的概率相加，作为新的概率 和剩余的概率重新排队，
+     * 再把最小的两个概率相加，再重新排队，直到最后变成1。每次相加时都将“0”和“1”赋与相加的两个概率，
+     * 读出时由该符号开始一直走到最后的“1”， 将路线上所遇到的“0”和“1”按最低位到最高位的顺序排好，就是该符号的赫夫曼编码。
+     * 一块金条切成两半，是需要花费和长度数值一样的铜板的。比如长度为20的金条，不管切成长度多大的两半，都要花费20个铜板。
+     * 一群人想整分整块金条，怎么分最省铜板?
+     * 输入一个数组、返回分割的最小代价。
+     * @param arr
+     * @return
+     */
+    private static int lessMoney(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            heap.add(arr[i]);
+        }
+        int sum = 0;
+        int cur = 0;
+        while (heap.size() > 1) {
+            cur = heap.poll() + heap.poll();
+            sum += cur;
+            heap.add(cur);
+        }
+        return sum;
+    }
+
+    /**
      * 由大到小
      */
     @Test
