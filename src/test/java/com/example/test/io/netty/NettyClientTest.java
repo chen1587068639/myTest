@@ -1,4 +1,4 @@
-package com.example.io.netty;
+package com.example.test.io.netty;
 
 import com.example.test.hanlder.MyClientHandler;
 import io.netty.bootstrap.Bootstrap;

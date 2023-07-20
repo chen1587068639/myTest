@@ -159,10 +159,56 @@ public class GraphAlgorithm {
     }
 
     /**
-     *
+     * dj特斯拉算法,计算某个节点到所有节点的最小路径
+     * 注意：需要没有负数的节点
+     * @param head 开始节点
      */
-    private static void dijkstra() {
+    private static HashMap<Node<Integer>,Integer> dijkstra(Node<Integer> head) {
+        //维护一个map，key值是节点，value值是head到该节点的距离
+        HashMap<Node<Integer>,Integer> distanceMap = new HashMap<>();
+        //放入头节点，头节点到本身的距离是0
+        distanceMap.put(head,0);
+        //求过距离的节点放到set中，不再求距离了
+        Set<Node<Integer>> selectNode = new HashSet<>();
+        //得到在distanceMap中找到距离最小的节点
+        Node<Integer> minNode = getMinDistance(distanceMap, selectNode);
+        while(minNode != null) {
+            //得出minNode节点到head节点的距离，计算minNode的下级节点的距离
+            int distance = distanceMap.get(minNode);
+            for (Edge<Integer> edge: minNode.edges) {
+                //minNode的下一个节点
+                Node<Integer> to = edge.to;
+                //如果从没有计算to节点到head的距离，则put
+                if (null != distanceMap.get(to)) {
+                    distanceMap.put(to,distance + edge.weight);
+                }
+                distanceMap.put(to,Math.min(distanceMap.get(to),distance + edge.weight));
+            }
+            selectNode.add(minNode);
+            minNode = getMinDistance(distanceMap,selectNode);
+        }
+        return distanceMap;
+    }
 
+    /**
+     * 在distanceMap中找到距离最小的节点（但是不能在selectMap中）
+     * @param distanceMap 距离集合
+     * @param selectNode 已求过距离的节点集合
+     * @return 返回最小距离节点
+     */
+    private static Node<Integer> getMinDistance(Map<Node<Integer>,Integer> distanceMap,Set<Node<Integer>> selectNode) {
+        //最小距离节点
+        Node<Integer> minNode = null;
+        int minDistance = Integer.MAX_VALUE;
+        for (Map.Entry<Node<Integer>,Integer> n : distanceMap.entrySet()) {
+            Node<Integer> currentNode = n.getKey();
+            Integer distance = n.getValue();
+            if (!selectNode.contains(currentNode) && distance < minDistance) {
+                minNode = currentNode;
+                minDistance = distance;
+            }
+        }
+        return minNode;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.io.nio;
+package com.example.test.io.nio;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +8,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
 
 /**
  * @Author: chengw

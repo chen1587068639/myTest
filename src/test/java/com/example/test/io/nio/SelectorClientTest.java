@@ -1,6 +1,5 @@
-package com.example.io.nio;
+package com.example.test.io.nio;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
