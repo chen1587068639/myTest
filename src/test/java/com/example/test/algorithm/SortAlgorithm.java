@@ -32,11 +32,11 @@ public class SortAlgorithm {
             }
         }
     }
-    private static void testSwap(int[] arr,int i,int j) {
-        arr[i] = arr[i] ^ arr[j];
-        arr[j] = arr[i] ^ arr[j];
-        arr[i] = arr[i] ^ arr[j];
-    }
+//    private static void testSwap(int[] arr,int i,int j) {
+//        arr[i] = arr[i] ^ arr[j];
+//        arr[j] = arr[i] ^ arr[j];
+//        arr[i] = arr[i] ^ arr[j];
+//    }
 
     /**
      * 选择排序算法：双层循环，每次选出剩余未排序子数组的最小数据替换到未排序子数组的开头位置（因为是跳跃替换，不稳定）
@@ -270,4 +270,32 @@ public class SortAlgorithm {
         arr[j] = arr[i] ^ arr[j];
         arr[i] = arr[i] ^ arr[j];
     }
+
+
+    /**
+     * 堆排序：将数组插入到堆结构的数据中
+     * 时间复杂度：O(n * log n)
+     * 稳定性：不稳定
+     * 空间复杂度：O(1)
+     * @param arr 数组
+     */
+    private void heapSort(int[] arr) {
+        Queue<Integer> heap = new PriorityQueue<>();
+        for (int l : arr) {
+            heap.add(l);
+        }
+        for (int i = 0; i < arr.length; i++) {
+            if (!heap.isEmpty()) {
+                arr[i] = heap.poll();
+            }
+        }
+
+    }
+
+    private static void testSwap(int[] arr,int i,int j) {
+        arr[i] = arr[i] ^ arr[j];
+        arr[j] = arr[i] ^ arr[j];
+        arr[i] = arr[i] ^ arr[j];
+    }
+
 }
