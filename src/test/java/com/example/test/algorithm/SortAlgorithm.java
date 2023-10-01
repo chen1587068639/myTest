@@ -46,17 +46,14 @@ public class SortAlgorithm {
      * @param arrayList 数组
      */
     public static void selectSort(List<Integer> arrayList) {
-        int n = 0;
         for (int i = 0; i < arrayList.size() - 1; i++) {
             //最小值索引
             int minIndex = i;
             for (int j = i + 1; j < arrayList.size(); j++) {
                 minIndex = arrayList.get(j) < arrayList.get(minIndex) ? j : minIndex;
-                n++;
             }
             swapByXOR(arrayList,i,minIndex);
         }
-        System.out.println("选择排序循环了:" + n + "次");
     }
 
     /**
@@ -67,20 +64,17 @@ public class SortAlgorithm {
      * @param arrayList 数组
      */
     public static void  bubblingSort(List<Integer> arrayList){
-        int n = 0;
         for (int j = arrayList.size(); j > 0; j--) {
             for (int i = 0; i < arrayList.size() - 1; i++) {
                 if (arrayList.get(i) > arrayList.get(i + 1)) {
                     swap(arrayList,i,i+1);
                 }
-                n++;
             }
         }
-        System.out.println("冒泡排序循环了:" + n + "次");
     }
 
     /**
-     * 插入排序：
+     * 插入排序：双层循环，前面的子数组维持有序，第n-1个以此和前面的数据以此对比交换
      * 时间复杂度：O(n^2)
      * 稳定性：稳定
      * 空间复杂度：O(1)
@@ -90,18 +84,16 @@ public class SortAlgorithm {
         if (null == arrayList || 2 > arrayList.size()) {
             return;
         }
-        int n = 0;
         for (int i = 1; i < arrayList.size(); i++) {
             for (int j = i;j > 0 && arrayList.get(j) < arrayList.get(j -1); j--) {
                 swapByXOR(arrayList,j,j-1);
-                n++;
             }
         }
-        System.out.println("插入排序循环了:" + n + "次");
     }
 
     /**
-     * 归并排序算法：
+     * 归并排序算法：递归分出左右两个子数组，对两个子数组（这两个子数组在之前的合并中已经有序了）进行合并排序
+     * （创建一个help数组，循环中指针指向子数组的起始位置比较，小的数放入help数组，自动指针再比较）
      * 时间复杂度：O(n * log N)
      * 稳定性：稳定
      * 空间复杂度：O(n)
@@ -160,7 +152,8 @@ public class SortAlgorithm {
     }
 
     /**
-     * 快速排序：
+     * 快速排序：本质上是递归排序，先指定一个数组中的数字，以这个数字k为线把数组分为左右两个子数组，
+     * 左子数组小于k，右子数组大于k，然后递归再对子数组重复以上操作，直到左右子数组元素只有一个为止
      * 时间复杂度：O(n * log n)
      * 稳定性：不稳定
      * 空间复杂度：O(log n)
