@@ -4,8 +4,10 @@ import com.example.test.util.DateUtils;
 import com.example.test.util.HttpUtils;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,16 +15,131 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @SpringBootTest
 public class DateTest {
 
-    private final static String TABLE_NAME_PRE = "box_data_backup_";
+    private static Object lock = new Object();
+    private static int count = 1;
+
 
     @Test
-    public void LongConversionDate(){
-        System.out.println(DateUtils.DATE_FORMAT_D.format(new Date(1670428800000L)));
+    public void testsdf() throws Exception {
+        ReentrantLock lock = new ReentrantLock();
+        lock.lock();
+
+        lock.unlock();
+        Class className = Class.forName("com.Test");
+        Thread letterThread = new Thread(() -> {
+            synchronized (lock) {
+                for (char c = 'a'; c <= 'e'; c++) {
+                    while (count != 1) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                    System.out.print(c);
+                    count = 2;
+                    lock.notifyAll();
+                }
+            }
+        });
+
+        Thread numberThread = new Thread(() -> {
+            synchronized (lock) {
+                for (int i = 1; i <= 5; i++) {
+                    while (count != 2) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                    System.out.print(i);
+                    count = 1;
+                    lock.notifyAll();
+                }
+            }
+        });
+
+        letterThread.start();
+        numberThread.start();
+    }
+
+
+class MyThread extends Thread{
+
+    @Override
+    public void run() {
+        try {
+            System.out.println("chen");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 阻塞队列
+     */
+    private static BlockingQueue<Integer> blockingQueue = new ArrayBlockingQueue<Integer>(20);
+
+    private final static String TABLE_NAME_PRE = "box_data_backup_";
+
+    public StringBuilder s = new StringBuilder("chen");
+
+    public synchronized void addOne() throws InterruptedException {
+        synchronized (s) {
+            s.append("gaowei");
+            System.out.println("thread开始睡眠十秒");
+            Thread.sleep(10000);
+            System.out.println("thread结束睡眠十秒");
+        }
+    }
+
+    public synchronized StringBuilder get(){
+        return s.append("chen");
+    }
+    @Test
+    public void LongConversionDate() throws Exception {
+        Class<?> dateTest = Class.forName("DateTest");
+        DateTest o = (DateTest)dateTest.newInstance();
+        
+        ThreadLocal threadLocal = new ThreadLocal();
+        threadLocal.set("chen");
+        MyThread myThread = new MyThread();
+        myThread.start();
+        Thread.sleep(3000);
+        System.out.println("i来了"+get());
+        Thread.sleep(10000);
+        System.out.println("主线程执行完毕");
     }
 
     @Test

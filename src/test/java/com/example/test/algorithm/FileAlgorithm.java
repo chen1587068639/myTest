@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @Author: chengw
@@ -21,6 +22,9 @@ public class FileAlgorithm {
      */
     @Test
     public void findHighWord() throws Exception {
+        synchronized (Object.class) {
+
+        }
         //大文件文件路径
         String path = "/Users/chengw/myWorld/test.txt";
 //        //开始填入一些测试数据

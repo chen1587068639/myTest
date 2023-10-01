@@ -40,4 +40,13 @@ public class StringUtils {
         }
         return newString;
     }
+
+    /**
+     * 如果字符串是空或者长度为0则返回true
+     * @param str
+     * @return
+     */
+    public static boolean isEmpty(String str) {
+        return str == null || str.length() == 0;
+    }
 }

@@ -3,8 +3,10 @@ package com.example.test.io.file;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.example.test.bean.AreaVo;
 import com.example.test.bean.OrderVo;
 import com.example.test.util.DateUtils;
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -19,6 +21,38 @@ import java.util.stream.Collectors;
  */
 @SpringBootTest
 public class ExcelTest {
+
+
+    @Test
+    public void test234() {
+        String path = "/Users/chengw/myWorld/";
+        String areaInfo = "停车点名称数据.xlsx";
+        String orderParkInfo = "21号团泊.xlsx";
+        ExcelReaderSheetBuilder sheet = EasyExcel.read(path + areaInfo).head(AreaVo.class).excelType(ExcelTypeEnum.XLSX).sheet();
+        List<AreaVo> parkList = sheet.doReadSync();
+
+
+        ExcelReaderSheetBuilder sheet1 = EasyExcel.read(path + orderParkInfo).head(AreaVo.class).excelType(ExcelTypeEnum.XLSX).sheet();
+        List<AreaVo> orderParkList = sheet1.doReadSync();
+        System.out.println(orderParkList.toString());
+
+        orderParkList.forEach(orderPark -> {
+            parkList.forEach(park -> {
+                if (orderPark.getAreaId().equals(park.getAreaId())) {
+                    orderPark.setAreaName(park.getAreaName());
+                    orderPark.setOperateAreaId(park.getOperateAreaId());
+                }
+            });
+        });
+        EasyExcel.write(path + "21号团泊finish.xlsx",AreaVo.class).sheet("结果").doWrite(orderParkList);
+    }
+
+
+
+
+
+
+
 
 
     /**

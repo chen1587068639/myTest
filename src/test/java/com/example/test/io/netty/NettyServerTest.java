@@ -11,6 +11,10 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+
 /**
  * @Author: chengw
  * @Date: 2022/12/19 下午5:04
@@ -26,12 +30,13 @@ public class NettyServerTest {
     }
 
     public static void main(String[] args) {
+
         System.out.println("服务端启动开始");
         //创建两个线程组 boosGroup、workerGroup
         //bossGroup 用于监听客户端连接，专门负责与客户端创建连接，并把连接注册到workerGroup的Selector中。
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         //workerGroup用于处理每一个连接发生的读写事件。
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup(8);
 
         //创建服务端的启动对象，设置参数：Bootstrap和ServerBootStrap是Netty提供的一个创建客户端和服务端启动器的工厂类
         ServerBootstrap bootstrap = new ServerBootstrap();
@@ -43,7 +48,7 @@ public class NettyServerTest {
             .option(ChannelOption.SO_BACKLOG, 128)
             //设置保持活动连接状态
             .childOption(ChannelOption.SO_KEEPALIVE, true)
-            //使用匿名内部类的形式初始化通道对象
+            //使用匿名内部类的形式初始化通道对象：NioEventLoop 读取到消息之后，直接调用ChannelPipeline的fireChannelRead(Object msg)，然后到channelRead(ChannelHandlerContext ctx, Object msg)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {

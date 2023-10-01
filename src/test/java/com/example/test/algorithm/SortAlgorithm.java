@@ -17,23 +17,6 @@ public class SortAlgorithm {
 
     @Test
     public void selectSort(){
-//        List<Integer> copyList = new ArrayList<>(ListCommon.arrayList);
-//        List<Integer> copyTwoList = new ArrayList<>(ListCommon.arrayList);
-//        System.out.println("原始数据组:" + ListCommon.arrayList);
-//        bubblingSort(ListCommon.arrayList);
-//        System.out.println(ListCommon.arrayList);
-//        System.out.println("拷贝数据组:" + copyList);
-//        selectSort(copyList);
-//        System.out.println(copyList);
-//        System.out.println("拷贝数据组2:" + copyTwoList);
-//        insertSort(copyTwoList);
-//        System.out.println(copyTwoList);
-//        List<Integer> copyThreeList = new ArrayList<>(ListCommon.arrayList);
-//        System.out.println("拷贝数据组2:" + copyThreeList);
-//        mergeSort(copyThreeList);
-//        System.out.println(copyThreeList);
-//        quickSort(arr,0,arr.length-1);
-//        System.out.println(Arrays.toString(arr));
         int[] arr = {3,7,2,9,0,1,5,5,8,4,6,5};
         testBubblingSort(arr);
         System.out.println(Arrays.toString(arr));
@@ -56,7 +39,7 @@ public class SortAlgorithm {
     }
 
     /**
-     * 选择排序算法
+     * 选择排序算法：双层循环，每次选出剩余未排序子数组的最小数据替换到未排序子数组的开头位置（因为是跳跃替换，不稳定）
      * 时间复杂度：n^2
      * 稳定性：不稳定
      * 空间复杂度：O(1)
@@ -77,7 +60,7 @@ public class SortAlgorithm {
     }
 
     /**
-     * 冒泡排序
+     * 冒泡排序：双层循环，每次将数据比较数组前后两个元素的大小，前者大则两者替换，每次循环都会把前面的未排序数组的最后一位排序（把最大的元素冒泡的最后）
      * 时间复杂度：O(n^2)
      * 稳定性：稳定
      * 空间复杂度：O(1)
@@ -224,7 +207,7 @@ public class SortAlgorithm {
      * @return
      */
 
-    private int partition(long[] arr, int i, int j, int pivotIndex) {
+    private int partition(long[] arr, int i, int j, int pivotIndex)             {
         // 将基准值移到结尾
         if (pivotIndex != j) {
             swap(arr, pivotIndex, j);
