@@ -3,7 +3,6 @@ package com.example.test.number;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
-import sun.print.ProxyGraphics2D;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
